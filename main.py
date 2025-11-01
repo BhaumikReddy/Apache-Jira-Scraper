@@ -1,6 +1,3 @@
-"""
-Main script for Apache JIRA scraper
-"""
 import argparse
 import json
 import os
@@ -14,7 +11,7 @@ from config import (
 )
 
 def scrape_projects(projects: List[str], transform_only: bool = False):
-    """Scrape and process Apache JIRA projects"""
+    #Scraping and processing
     state = load_state()
     processed_issues = state.get('processed_issues', set())
 
@@ -66,4 +63,5 @@ def main():
     scrape_projects(args.projects, args.transform_only)
 
 if __name__ == '__main__':
+
     main()
