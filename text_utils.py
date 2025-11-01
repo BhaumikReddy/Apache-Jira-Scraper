@@ -1,12 +1,11 @@
-"""
-Text processing utilities for cleaning and transforming Apache JIRA data
-"""
+#Text processing utilities for cleaning and transforming Apache JIRA data
+
 import re
 from html import unescape
 from typing import Dict, Any
 
 def clean_text(text: str) -> str:
-    """Clean and normalize text content"""
+    #Clean and normalize text content
     if not text:
         return ""
     # Remove extra whitespace
@@ -14,7 +13,7 @@ def clean_text(text: str) -> str:
     return text.strip()
 
 def remove_html_tags(html_text: str) -> str:
-    """Remove HTML tags and decode HTML entities"""
+    #Remove HTML tags and decode HTML entities
     if not html_text:
         return ""
     # Remove HTML tags
@@ -25,7 +24,7 @@ def remove_html_tags(html_text: str) -> str:
     return clean_text(text)
 
 def transform_issue(issue: Dict[str, Any]) -> Dict[str, Any]:
-    """Transform a raw issue into cleaned format"""
+    #Transform a raw issue into cleaned format
     fields = issue.get('fields', {})
     return {
         'key': issue['key'],
@@ -41,4 +40,5 @@ def transform_issue(issue: Dict[str, Any]) -> Dict[str, Any]:
             }
             for comment in fields.get('comment', {}).get('comments', [])
         ]
+
     }
