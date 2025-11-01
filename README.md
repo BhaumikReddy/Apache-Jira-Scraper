@@ -54,10 +54,45 @@ The script creates two types of output:
    - One JSON object per line
    - Contains cleaned and transformed issue data
    - Includes: key, summary, description, status, comments
+   - Example of a cleaned JSON line (one per line in `data/train.jsonl`)
+
+```json
+{
+"key": "TIKA-123",
+"summary": "Example summary",
+"description": "Cleaned description text.",
+"status": "Resolved",
+"created": "2020-01-01T00:00:00.000+0000",
+"comments":
+[
+{"author": "User Name",
+"text": "Helpful comment.",
+"created": "2020-01-02T00:00:00.000+0000"}
+]
+}
+```
 
 ## Project Structure
 
 - `main.py` - Main script to run
 - `jira_scraper.py` - Handles JIRA API interaction
 - `text_utils.py` - Text cleaning and transformation
+
 - `config.py` - Configuration and constants
+
+## Design and reasoning
+
+I kept the code simple and readable. Each file has one job.
+
+- Single-threaded scraping keeps behavior predictable and avoids aggressive load on the public API.
+- Retry + small sleeps make the scraper more polite and reduce failures.
+- Saving raw JSON helps debugging and lets you re-run transformations without re-downloading.
+
+## Edge cases handled
+
+- Paging: fetches pages until no more issues are left.
+- Rate limiting (HTTP 429): retries and pauses between pages reduce chance of being throttled.
+- Network errors: transient failures are retried by the HTTP session configuration.
+- Missing data: transformer uses defaults so missing fields won't crash the run.
+- HTML content: HTML tags stripped and HTML entities decoded for readable text.
+- Partial runs: processed issue keys are saved so a stopped run can resume.
